@@ -196,10 +196,9 @@ multi &lt;- readRDS(&quot;multi_allassays.RDS&quot;)</code></pre>
 <pre class="r"><code>mats &lt;- prepare_pseudocell_matrix(multi, assay = c(&quot;peaks&quot;, &quot;SCT&quot;), cells_per_partition = 100)
 expr_mat &lt;- mats[[&quot;SCT&quot;]]
 peak_mat &lt;- mats[[&quot;peaks&quot;]]</code></pre>
-<p>A good starting point is modeling the genes that are differentially expressed. For its first step to predict CREs, we use the full dataset containing all cell types, because fewer CREs may have differential accessibility between two related cell types/states, relative to the accessibility differences between those two clusters and the rest of the dataset. We default to include all CREs in order to include all potential relevant regulatory TFs. For the adaptive elastic net step, lambda2 = 0.5 and num_bootstraps = 100 are good defaults to achieve good model performance in relatively short runtime.</p>
+<p>A good starting point is modeling the genes that are differentially expressed. For its first step to predict CREs, we use the full dataset containing all cell types, because fewer CREs may have differential accessibility between two related cell types/states, relative to the accessibility differences between those two clusters and the rest of the dataset. We default to include all CREs in order to include all potential relevant regulatory TFs. For the adaptive elastic net step, lambda2 = 0.5 and num_bootstraps = 100 are good defaults to achieve good model performance and relatively short runtime.</p>
 <pre class="r"><code>mpt &lt;- subset(multi, celltype %in% c(&quot;PCT&quot;, &quot;PST&quot;, &quot;KIM1+ PT&quot;))
-de.genes &lt;- FindMarkers(mpt, ident.1 = c(&quot;PCT&quot;, &quot;PST&quot;), ident.2 = &quot;KIM1+ PT&quot;, min.pct = .1, assay = &quot;SCT&quot;, slot = data)
-gene_list &lt;- rownames(prepare_degs(multi))[1:100]
+gene_list &lt;- rownames(prepare_degs(mpt))[1:100]
 
 peak_results &lt;- run_peak_aen(multi, expr_mat, peak_mat, gene_list, lambda2 = 0.5, max_distance = 5e+05, num_bootstraps = 100)
 aen_lists &lt;- make_aen_lists(peak_results)</code></pre>
