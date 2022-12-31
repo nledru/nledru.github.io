@@ -222,7 +222,7 @@ tf_results &lt;- run_tf_aen(mpt, expr_mat, peak_results, gene_list, lambda2 = 0.
 regulator_tf_names &lt;- unlist(multi@assays$peaks@motifs@motif.names)
 regulator_tf_names &lt;- regulator_tf_names[which(regulator_tf_names %in% rownames(GetAssayData(multi, assay = &quot;SCT&quot;)))]</code></pre>
 <p>We can then rank TFs by predicted regulatory score. To calculate each TF’s score, we sum its estimated regulatory coefficients across all modeled genes, then weight by expression. If studying a trajectory, you can input a vector of genes to be weighted negatively. This allows for delineation between TFs that are associated with one side of the trajectory versus the other. Since our ranking approach also factors in TF expression, it might be useful to rank TFs by centrality as well.</p>
-<pre class="r"><code>tf_df &lt;- rank_tfs(tf_results, fr_genes, regulator_tf_names, mpt, num_cores = 1)
+<pre class="r"><code>tf_df &lt;- rank_tfs(tf_results, mpt, fr_genes, regulator_tf_names, num_cores = 1)
 plot_tf_rankings(tf_df)
 
 centrality_rankings &lt;- rank_tfs_by_centrality(tf_results, mpt)
